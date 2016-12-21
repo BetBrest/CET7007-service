@@ -4,15 +4,15 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="Service7007.exe"/>
-    <OBJFILES value="Service7007.obj Main.obj Port_settings.obj"/>
+    <OBJFILES value="Service7007.obj Main.obj"/>
     <RESFILES value="Service7007.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) Main.dfm Port_settings.dfm"/>
+    <RESDEPEN value="$(RESFILES) Main.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="CPortLibCB6.lib rtl.lib vcl.lib"/>
-    <SPARELIBS value="vcl.lib rtl.lib CPortLibCB6.lib"/>
+    <LIBRARIES value="rtl.lib vcl.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
       vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
       teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
@@ -30,15 +30,14 @@
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="_RTLDLL;NO_STRICT"/>
     <MAINSOURCE value="Service7007.cpp"/>
-    <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;D:\GIT\CET7007-service;$(BCB)\include;$(BCB)\include\vcl;&quot;C:\Program Files\Borland\CBuilder6\Source&quot;"/>
-    <LIBPATH value="$(BCB)\Projects\Lib;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;D:\GIT\CET7007-service;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files\Borland\CBuilder6\сport&quot;"/>
+    <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;D:\GIT\CET7007-service;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;D:\GIT\CET7007-service;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files\Borland\CBuilder6\Source\cport&quot;"/>
     <WARNINGS value="-w-par"/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
     <IDLCFLAGS value="-I&quot;C:\Program Files\Borland\CBuilder6\Projects&quot; -ID:\GIT\CET7007-service 
-      -I$(BCB)\include -I$(BCB)\include\vcl 
-      -I&quot;C:\Program Files\Borland\CBuilder6\Source&quot; -src_suffix cpp -D_DEBUG -boa"/>
+      -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp -D_DEBUG -boa"/>
     <CFLAG1 value="-Od -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -c 
       -tW -tWM"/>
     <PFLAGS value="-$YD -$W -$O- -$A8 -v -JPHNE -M"/>
@@ -57,7 +56,6 @@
       <FILE FILENAME="Service7007.res" FORMNAME="" UNITNAME="Service7007.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Service7007.cpp" FORMNAME="" UNITNAME="Service7007" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Main.cpp" FORMNAME="Form1" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="Port_settings.cpp" FORMNAME="Form2" UNITNAME="Port_settings" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
@@ -91,17 +89,13 @@ ProductVersion=1.0.0.0
 Comments=
 
 [HistoryLists\hlIncludePath]
-Count=3
-Item0=C:\Program Files\Borland\CBuilder6\Projects;D:\GIT\CET7007-service;$(BCB)\include;$(BCB)\include\vcl;C:\Program Files\Borland\CBuilder6\Source
-Item1=C:\Program Files\Borland\CBuilder6\Projects;D:\GIT\CET7007-service;$(BCB)\include;$(BCB)\include\vcl
-Item2=$(BCB)\include;$(BCB)\include\vcl
+Count=1
+Item0=$(BCB)\include;$(BCB)\include\vcl
 
 [HistoryLists\hlLibraryPath]
-Count=4
-Item0=$(BCB)\Projects\Lib;C:\Program Files\Borland\CBuilder6\Projects;D:\GIT\CET7007-service;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files\Borland\CBuilder6\сport
-Item1=$(BCB)\Projects\Lib;C:\Program Files\Borland\CBuilder6\Projects;D:\GIT\CET7007-service;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files\Borland\CBuilder6\Source\cport
-Item2=$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files\Borland\CBuilder6\Source\cport
-Item3=$(BCB)\lib\obj;$(BCB)\lib
+Count=2
+Item0=$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files\Borland\CBuilder6\Source\cport
+Item1=$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1
