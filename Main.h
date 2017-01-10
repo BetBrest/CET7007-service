@@ -65,6 +65,7 @@ __published:	// IDE-managed Components
         TStringGrid *StringGrid1;
         TButton *Button3;
         TTimer *Timer1;
+        TStringGrid *StringGrid2;
         void __fastcall N4Click(TObject *Sender);
         void __fastcall N2Click(TObject *Sender);
         void __fastcall Button2Click(TObject *Sender);

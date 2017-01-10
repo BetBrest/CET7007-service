@@ -1,9 +1,9 @@
 object Form1: TForm1
-  Left = 297
-  Top = 205
-  Width = 1088
+  Left = 244
+  Top = 136
+  Width = 943
   Height = 563
-  Caption = #1057#1077#1088#1074#1080#1089#1085#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072' '#1057#1069#1058'7007 '
+  Caption = #1063#1090#1077#1085#1080#1077' '#1072#1088#1093#1080#1074#1072' '#1057#1069#1058'7007 '#1095#1077#1088#1077#1079' '#1086#1087#1090#1086#1087#1086#1088#1090
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,9 +14,82 @@ object Form1: TForm1
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
+  object PageControl1: TPageControl
+    Left = 16
+    Top = 48
+    Width = 897
+    Height = 393
+    ActivePage = TabSheet2
+    TabIndex = 1
+    TabOrder = 0
+    object TabSheet1: TTabSheet
+      Caption = #1040#1088#1093#1080#1074' '#1101#1085#1077#1088#1075#1080#1080
+      object ComboBox1: TComboBox
+        Left = 8
+        Top = 8
+        Width = 145
+        Height = 21
+        ItemHeight = 13
+        TabOrder = 0
+        Text = #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1091#1090#1086#1082
+        Items.Strings = (
+          #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1091#1090#1086#1082
+          #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1084#1077#1089#1103#1094#1072
+          #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1075#1086#1076#1072)
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = #1040#1088#1093#1080#1074' '#1084#1086#1097#1085#1086#1089#1090#1080
+      ImageIndex = 1
+      object ComboBox2: TComboBox
+        Left = 8
+        Top = 8
+        Width = 145
+        Height = 21
+        ItemHeight = 13
+        TabOrder = 0
+        Text = #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1091#1090#1086#1082
+        Items.Strings = (
+          #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1091#1090#1086#1082
+          #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1084#1077#1089#1103#1094#1072
+          #1085#1072' '#1085#1072#1095#1072#1083#1086' '#1075#1086#1076#1072)
+      end
+      object StringGrid1: TStringGrid
+        Left = 24
+        Top = 56
+        Width = 833
+        Height = 297
+        TabOrder = 1
+      end
+      object Button3: TButton
+        Left = 768
+        Top = 16
+        Width = 91
+        Height = 25
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1072#1088#1093#1080#1074
+        TabOrder = 2
+      end
+    end
+  end
+  object Button1: TButton
+    Left = 688
+    Top = 88
+    Width = 91
+    Height = 25
+    Caption = #1057#1095#1080#1090#1072#1090#1100' '#1072#1088#1093#1080#1074
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 824
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100
+    TabOrder = 2
+    OnClick = Button2Click
+  end
   object MainMenu1: TMainMenu
-    Left = 976
-    Top = 32
+    Left = 736
     object N3: TMenuItem
       Caption = #1060#1072#1081#1083
       object N4: TMenuItem
@@ -47,7 +120,13 @@ object Form1: TForm1
     FlowControl.XonXoffIn = False
     StoredProps = [spBasic]
     TriggersOnRxChar = True
-    Left = 904
-    Top = 40
+    OnRxChar = ComPort1RxChar
+    Left = 776
+  end
+  object Timer1: TTimer
+    Enabled = False
+    OnTimer = Timer1Timer
+    Left = 680
+    Top = 8
   end
 end

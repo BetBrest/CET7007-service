@@ -37,6 +37,14 @@ object Form1: TForm1
           #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1084#1077#1089#1103#1094#1072
           #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1075#1086#1076#1072)
       end
+      object StringGrid2: TStringGrid
+        Left = 16
+        Top = 48
+        Width = 857
+        Height = 297
+        ScrollBars = ssVertical
+        TabOrder = 1
+      end
     end
     object TabSheet2: TTabSheet
       Caption = #1040#1088#1093#1080#1074' '#1084#1086#1097#1085#1086#1089#1090#1080
@@ -57,14 +65,14 @@ object Form1: TForm1
       object StringGrid1: TStringGrid
         Left = 24
         Top = 56
-        Width = 833
+        Width = 849
         Height = 297
         TabOrder = 1
       end
       object Button3: TButton
         Left = 768
         Top = 16
-        Width = 91
+        Width = 97
         Height = 25
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1072#1088#1093#1080#1074
         TabOrder = 2
