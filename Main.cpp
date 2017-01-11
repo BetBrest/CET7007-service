@@ -5,11 +5,14 @@
 
 #include "Main.h"
 //#include "Port_Settings.h"
+#include "IniFiles.hpp"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma link "CPort"
 #pragma resource "*.dfm"
 TForm1 *Form1;
+AnsiString dir = GetCurrentDir(); 
+//**************** COMPORT variables*******************************************
 unsigned char ReadInfo[] ={0x07, 0x34, 0x00, 0x00, 0x00, 0xBB, 0xF0 } ;
 bool new_paket=true;  //  read the new package from the port
 unsigned char read_byte; // the number of bits read from comport
@@ -19,6 +22,8 @@ unsigned char flag_IDP=0; //  IDP=2 -day begin, IDP=4 - month begin
 unsigned char IDP; //  request ID  1-byte
 unsigned char IDR; //  additional  request 1-byte
 
+
+bool Meter_connect=false;
 
 
 //---------------------------------------------------------------------------
@@ -40,7 +45,11 @@ void __fastcall TForm1::N4Click(TObject *Sender)
 void __fastcall TForm1::N2Click(TObject *Sender)
 {
 //Form2->Visible=true;
- Form1->ComPort1->ShowSetupDialog();
+     dir = GetCurrentDir();
+     ComPort1->LoadSettings(stIniFile, dir + "\\PortSettings.ini");
+     ComPort1->ShowSetupDialog();
+     ComPort1->StoreSettings(stIniFile, dir + "\\PortSettings.ini");
+
 
 
 }
@@ -55,8 +64,8 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
   if (Button2->Caption=="Подключить")
   {
    Button2->Caption="Отключить" ;
-/* dir = GetCurrentDir();
-   ComPort1->LoadSettings(stIniFile, dir + "\\PortSettings.ini");    */
+   dir = GetCurrentDir();
+   ComPort1->LoadSettings(stIniFile, dir + "\\PortSettings.ini");
    ComPort1->Open();
    SendData(0x00,0x00,0x01);
    Form1->Timer1->Enabled=true;
@@ -64,7 +73,9 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
   else
   {
    ComPort1->Close();
+   Button1->Enabled=false;
    Button2->Caption="Подключить";
+   Label1->Caption="";
   }
 }
 //---------------------------------------------------------------------------
@@ -97,6 +108,11 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
         if(DecodeInBuffer())
         {
         // ShowMessage("Пакет разобран");
+        if(Meter_connect==true)
+        Button1->Enabled=true;
+        else
+        Button1->Enabled=false;
+
           new_paket = true;
           read_byte=0;
 
@@ -164,7 +180,7 @@ TForm1::SendData(unsigned char i, unsigned char j, unsigned char k)
    else
 {
  // Button3->Enabled=true;
-  ShowMessage("Для получения инорфмации выберите счетчик !");       //TODO: Add your source code here
+  ShowMessage("Для получения инорфмации выберите счетчик !");
  }
  return true;
 }
@@ -227,9 +243,15 @@ bool TForm1::DecodeInBuffer()
       {
      // ShowMessage("Счетчик подключен п");
        if(ReadSysPar())
-       break;
+       {
+        Meter_connect=true;
+        break;
+       }
        else
-       return false;
+       {
+        Meter_connect=false;
+        return false;
+       }
       }
 
       default:  //
@@ -312,7 +334,7 @@ bool __fastcall TForm1::ReadSysPar()
  InfoMeters+= ") A ";
  //read service function
 
-  InfoMeters+= "  Сервисные фунции: ";
+/*  InfoMeters+= "  Сервисные фунции: ";
  if (work_buffer[11]&BIT7) InfoMeters+="A";
  else InfoMeters+=" ";
  if (work_buffer[11]&BIT6) InfoMeters+="R";
@@ -327,7 +349,7 @@ bool __fastcall TForm1::ReadSysPar()
  else InfoMeters+=" ";
  InfoMeters+=" ";
  if (work_buffer[11]&BIT2) InfoMeters+="M";
- else InfoMeters+=" ";
+ else InfoMeters+=" ";   */
 
  //ValueListEditor1->Cells[1][1]= InfoMeters ;
 
@@ -335,7 +357,8 @@ bool __fastcall TForm1::ReadSysPar()
 
  Factory_Number=(work_buffer[13]<<24)+(work_buffer[14]<<16)+(work_buffer[15]<<8)+work_buffer[16];
 // ValueListEditor1->Cells[1][2]= Factory_Number ;
-  ShowMessage("Счетчик подключен №: " +  IntToStr(Factory_Number) + "  "+ InfoMeters );
+  //ShowMessage("Счетчик подключен №: " +  IntToStr(Factory_Number) + "  "+ InfoMeters );
+    Label1->Caption= "Подключен счетчик  №: " +  IntToStr(Factory_Number) + "  "+ InfoMeters;
 //****** read version protocol ***************************************************
 /*
  Ver_Protocol=  IntToStr(work_buffer[17]) + "." + IntToStr(work_buffer[18]) ;
@@ -385,8 +408,14 @@ void __fastcall TForm1::Timer1Timer(TObject *Sender)
 {
 Timer1->Enabled=false;
 Button2->Caption="Подключить";
-ShowMessage("Cчетчик не отвечает!  Проверьте настройки порта иподключение!");
+ShowMessage("Cчетчик не отвечает!  Проверьте настройки порта и подключение к счетчику!");
 
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::FormCreate(TObject *Sender)
+{
+Button1->Enabled=false;
 }
 //---------------------------------------------------------------------------
 

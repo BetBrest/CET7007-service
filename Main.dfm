@@ -12,8 +12,21 @@ object Form1: TForm1
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
+  object Label1: TLabel
+    Left = 32
+    Top = 8
+    Width = 649
+    Height = 25
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
   object PageControl1: TPageControl
     Left = 16
     Top = 48
@@ -80,8 +93,8 @@ object Form1: TForm1
     end
   end
   object Button1: TButton
-    Left = 688
-    Top = 88
+    Left = 689
+    Top = 90
     Width = 91
     Height = 25
     Caption = #1057#1095#1080#1090#1072#1090#1100' '#1072#1088#1093#1080#1074
