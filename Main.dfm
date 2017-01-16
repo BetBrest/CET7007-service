@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 244
-  Top = 136
-  Width = 943
-  Height = 563
+  Left = 348
+  Top = 144
+  Width = 938
+  Height = 507
   Caption = #1063#1090#1077#1085#1080#1077' '#1072#1088#1093#1080#1074#1072' '#1057#1069#1058'7007 '#1095#1077#1088#1077#1079' '#1086#1087#1090#1086#1087#1086#1088#1090
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -37,6 +37,9 @@ object Form1: TForm1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #1040#1088#1093#1080#1074' '#1101#1085#1077#1088#1075#1080#1080
+      DesignSize = (
+        889
+        365)
       object ComboBox1: TComboBox
         Left = 8
         Top = 8
@@ -55,8 +58,27 @@ object Form1: TForm1
         Top = 48
         Width = 857
         Height = 297
+        Anchors = [akLeft, akTop, akBottom]
+        BiDiMode = bdLeftToRight
+        ColCount = 6
+        FixedCols = 0
+        RowCount = 6
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentBiDiMode = False
+        ParentFont = False
         ScrollBars = ssVertical
         TabOrder = 1
+        ColWidths = (
+          90
+          117
+          141
+          165
+          150
+          235)
       end
     end
     object TabSheet2: TTabSheet
@@ -99,6 +121,7 @@ object Form1: TForm1
     Height = 25
     Caption = #1057#1095#1080#1090#1072#1090#1100' '#1072#1088#1093#1080#1074
     TabOrder = 1
+    OnClick = Button1Click
   end
   object Button2: TButton
     Left = 824

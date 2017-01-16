@@ -215,8 +215,6 @@ bool TForm1::DecodeInBuffer()
    ShowMessage("Ошибка контрольной суммы!!!" + IntToStr(CRC16b(&work_buffer[0],work_buffer[0]-2)));
   return false;
   }
-//   ShowMessage(" контрольной суммы!!!" + IntToStr(CRC16b(&work_buffer[0],work_buffer[0]-2)));
-
 
 //************** Chek Net Adress ***********************************************
 
@@ -241,7 +239,6 @@ bool TForm1::DecodeInBuffer()
     {
       case 0:  //  Read system parameters  of meters
       {
-     // ShowMessage("Счетчик подключен п");
        if(ReadSysPar())
        {
         Meter_connect=true;
@@ -256,7 +253,7 @@ bool TForm1::DecodeInBuffer()
 
       default:  //
       {
-      ShowMessage("Неизвестный дополнительный идентефикатор пакета!");
+      ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
       return false;
       }
 
@@ -293,11 +290,35 @@ bool TForm1::DecodeInBuffer()
     }
      break;
   }  */
+  case 9:  //  Read system parameters  of meters
+      {
+      /* if(ReadSysPar())
+       {
+        Meter_connect=true;
+        break;
+       }
+       else
+       {
+        Meter_connect=false;
+        return false;
+       }
+      }
+
+      default:  //
+      {
+      ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
+      return false;
+      }
+
+     }
+         */
+     break;
+  }
 
 
   default:
   {
-   ShowMessage("Неизвестный идентефикатор пакета!");
+   ShowMessage("Неизвестный идентефикатор пакета IDP = "+IntToStr(IDP));
    return false;
   }
  }
@@ -398,8 +419,6 @@ bool __fastcall TForm1::ReadSysPar()
 //(byte[0]<<24)+(byte[1]<<16)+byte[2]<<8)+byte[3];
     Meter_Status = (work_buffer[48]<<24) + (work_buffer[49]<<16) + (work_buffer[50]<<8) + work_buffer[51];///
 
-
-
        */
 return true;
 }
@@ -415,7 +434,21 @@ ShowMessage("Cчетчик не отвечает!  Проверьте настройки порта и подключение к сче
 
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
-Button1->Enabled=false;
+ Button1->Enabled=false;
+ Form1->StringGrid2->Cells[0][0]= "Дата/время";
+ Form1->StringGrid2->Cells[1][0]= "Энергия поТ1";
+ Form1->StringGrid2->Cells[2][0]= "Энергия поТ2";
+ Form1->StringGrid2->Cells[3][0]= "Энергия поТ3";
+ Form1->StringGrid2->Cells[4][0]= "Энергия поТ4" ;
+ Form1->StringGrid2->Cells[5][0]= "Энергия по сумме тарифов";
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+ //Чтение мгновенной энергии
+ SendData(0x08,0x03,0x01);
+}
+//---------------------------------------------------------------------------
+
 
