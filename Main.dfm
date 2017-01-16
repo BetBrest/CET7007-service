@@ -18,8 +18,8 @@ object Form1: TForm1
   object Label1: TLabel
     Left = 32
     Top = 8
-    Width = 649
-    Height = 25
+    Width = 5
+    Height = 16
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
@@ -32,8 +32,8 @@ object Form1: TForm1
     Top = 48
     Width = 897
     Height = 393
-    ActivePage = TabSheet2
-    TabIndex = 1
+    ActivePage = TabSheet1
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #1040#1088#1093#1080#1074' '#1101#1085#1077#1088#1075#1080#1080

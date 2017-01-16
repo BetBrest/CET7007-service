@@ -66,11 +66,13 @@ __published:	// IDE-managed Components
         TButton *Button3;
         TTimer *Timer1;
         TStringGrid *StringGrid2;
+        TLabel *Label1;
         void __fastcall N4Click(TObject *Sender);
         void __fastcall N2Click(TObject *Sender);
         void __fastcall Button2Click(TObject *Sender);
         void __fastcall ComPort1RxChar(TObject *Sender, int Count);
         void __fastcall Timer1Timer(TObject *Sender);
+        void __fastcall FormCreate(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
