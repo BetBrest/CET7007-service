@@ -290,6 +290,30 @@ bool TForm1::DecodeInBuffer()
     }
      break;
   }  */
+  case 9:  //  Read system parameters  of meters
+      {
+      /* if(ReadSysPar())
+       {
+        Meter_connect=true;
+        break;
+       }
+       else
+       {
+        Meter_connect=false;
+        return false;
+       }
+      }
+
+      default:  //
+      {
+      ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
+      return false;
+      }
+
+     }
+         */
+     break;
+  }
 
 
   default:
@@ -395,8 +419,6 @@ bool __fastcall TForm1::ReadSysPar()
 //(byte[0]<<24)+(byte[1]<<16)+byte[2]<<8)+byte[3];
     Meter_Status = (work_buffer[48]<<24) + (work_buffer[49]<<16) + (work_buffer[50]<<8) + work_buffer[51];///
 
-
-
        */
 return true;
 }
@@ -419,14 +441,14 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
  Form1->StringGrid2->Cells[3][0]= "Энергия поТ3";
  Form1->StringGrid2->Cells[4][0]= "Энергия поТ4" ;
  Form1->StringGrid2->Cells[5][0]= "Энергия по сумме тарифов";
-
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
- //ЧТение мгновенной энергии
+ //Чтение мгновенной энергии
  SendData(0x08,0x03,0x01);
 }
 //---------------------------------------------------------------------------
+
 

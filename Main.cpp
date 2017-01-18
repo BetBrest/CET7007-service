@@ -290,7 +290,7 @@ bool TForm1::DecodeInBuffer()
     }
      break;
   }  */
-  case 9:  //  Read system parameters  of meters
+  case 9:  //  Reading current energy savings
       {
       /* if(ReadSysPar())
        {
