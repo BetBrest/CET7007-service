@@ -24,6 +24,7 @@ unsigned char IDR; //  additional  request 1-byte
 
 
 bool Meter_connect=false;
+unsigned int KTU=1,KTI=1;
 
 
 //---------------------------------------------------------------------------
@@ -292,26 +293,27 @@ bool TForm1::DecodeInBuffer()
   }  */
   case 9:  //  Reading current energy savings
       {
-      /* if(ReadSysPar())
+       if(IDR==1)
        {
-        Meter_connect=true;
-        break;
+       ShowMessage("Текущая энергия");
+       KTU= (work_buffer[5]<<8)+work_buffer[6];
+       KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+       StringGrid2->Cells[5][1]= (work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12];
+       StringGrid2->Cells[1][1]=(work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16];
+       StringGrid2->Cells[2][1]=(work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20];
+       StringGrid2->Cells[3][1]=(work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24];
+       StringGrid2->Cells[4][1]=(work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28];
+
+
        }
        else
        {
-        Meter_connect=false;
+        ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
         return false;
        }
-      }
 
-      default:  //
-      {
-      ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
-      return false;
-      }
 
-     }
-         */
+
      break;
   }
 
@@ -447,7 +449,7 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
  //Чтение мгновенной энергии
- SendData(0x08,0x03,0x01);
+ SendData(0x08,0x01,0x01);
 }
 //---------------------------------------------------------------------------
 
