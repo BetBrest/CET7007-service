@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 234
-  Top = 189
-  Width = 938
-  Height = 507
+  Left = 209
+  Top = 112
+  Width = 937
+  Height = 714
   Caption = #1063#1090#1077#1085#1080#1077' '#1072#1088#1093#1080#1074#1072' '#1057#1069#1058'7007 '#1095#1077#1088#1077#1079' '#1086#1087#1090#1086#1087#1086#1088#1090
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,26 +29,28 @@ object Form1: TForm1
   end
   object PageControl1: TPageControl
     Left = 16
-    Top = 48
-    Width = 897
-    Height = 393
+    Top = 40
+    Width = 905
+    Height = 601
     ActivePage = TabSheet1
     TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #1040#1088#1093#1080#1074' '#1101#1085#1077#1088#1075#1080#1080
       DesignSize = (
-        889
-        365)
+        897
+        573)
       object ComboBox1: TComboBox
         Left = 8
         Top = 8
         Width = 145
         Height = 21
+        AutoComplete = False
+        Style = csDropDownList
         ItemHeight = 13
         TabOrder = 0
-        Text = #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1091#1090#1086#1082
         Items.Strings = (
+          #1058#1077#1082#1091#1097#1080#1077' '#1087#1086#1082#1072#1079#1072#1085#1080#1103
           #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1091#1090#1086#1082
           #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1084#1077#1089#1103#1094#1072
           #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1075#1086#1076#1072)
@@ -56,13 +58,13 @@ object Form1: TForm1
       object StringGrid2: TStringGrid
         Left = 16
         Top = 48
-        Width = 857
-        Height = 297
+        Width = 865
+        Height = 505
         Anchors = [akLeft, akTop, akBottom]
         BiDiMode = bdLeftToRight
         ColCount = 6
         FixedCols = 0
-        RowCount = 6
+        RowCount = 97
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -73,12 +75,20 @@ object Form1: TForm1
         ScrollBars = ssVertical
         TabOrder = 1
         ColWidths = (
-          90
-          117
+          108
+          137
+          148
           141
-          165
-          150
-          235)
+          133
+          168)
+      end
+      object CheckBox1: TCheckBox
+        Left = 232
+        Top = 8
+        Width = 297
+        Height = 17
+        Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1074#1074#1077#1076#1077#1085#1085#1099#1077' '#1082#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1090#1088#1072#1085#1089#1092#1086#1088#1084#1072#1094#1080#1080
+        TabOrder = 2
       end
     end
     object TabSheet2: TTabSheet
@@ -116,7 +126,7 @@ object Form1: TForm1
   end
   object Button1: TButton
     Left = 689
-    Top = 90
+    Top = 82
     Width = 91
     Height = 25
     Caption = #1057#1095#1080#1090#1072#1090#1100' '#1072#1088#1093#1080#1074
@@ -131,6 +141,14 @@ object Form1: TForm1
     Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100
     TabOrder = 2
     OnClick = Button2Click
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 641
+    Width = 929
+    Height = 19
+    Panels = <>
+    SimplePanel = False
   end
   object MainMenu1: TMainMenu
     Left = 736

@@ -23,7 +23,10 @@ unsigned char IDP; //  request ID  1-byte
 unsigned char IDR; //  additional  request 1-byte
 
 
-bool Meter_connect=false;
+bool Meter_connect=false;   // Flag of meter's connection
+unsigned int KTU=1,KTI=1;   // coefficient of transformation
+unsigned char Count_Day=0;  // Dept days archive,max 95;
+bool Packet_received=false; // Flag permission to send the next packet
 
 
 //---------------------------------------------------------------------------
@@ -37,7 +40,7 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 
 void __fastcall TForm1::N4Click(TObject *Sender)
 {
- Form1->Close();        
+ Form1->Close();
 }
 //---------------------------------------------------------------------------
 
@@ -49,14 +52,8 @@ void __fastcall TForm1::N2Click(TObject *Sender)
      ComPort1->LoadSettings(stIniFile, dir + "\\PortSettings.ini");
      ComPort1->ShowSetupDialog();
      ComPort1->StoreSettings(stIniFile, dir + "\\PortSettings.ini");
-
-
-
 }
-//---------------------------------------------------------------------------
-
-
-
+//--------------------------------------------------------------------------
 
 
 void __fastcall TForm1::Button2Click(TObject *Sender)
@@ -292,26 +289,28 @@ bool TForm1::DecodeInBuffer()
   }  */
   case 9:  //  Reading current energy savings
       {
-      /* if(ReadSysPar())
+       if(IDR==1)
        {
-        Meter_connect=true;
-        break;
+      // ShowMessage("“екуща€ энерги€");
+       KTU= (work_buffer[5]<<8)+work_buffer[6];
+       KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+       if (CheckBox1->Checked==false)  KTU=KTI=1;
+       StringGrid2->Cells[5][1]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
+       StringGrid2->Cells[1][1]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
+       StringGrid2->Cells[2][1]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
+       StringGrid2->Cells[3][1]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
+       StringGrid2->Cells[4][1]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
+       StringGrid2->Cells[0][1]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
+
        }
        else
        {
-        Meter_connect=false;
+        ShowMessage("Ќеизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
         return false;
        }
-      }
 
-      default:  //
-      {
-      ShowMessage("Ќеизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
-      return false;
-      }
 
-     }
-         */
+
      break;
   }
 
@@ -436,19 +435,41 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 {
  Button1->Enabled=false;
  Form1->StringGrid2->Cells[0][0]= "ƒата/врем€";
- Form1->StringGrid2->Cells[1][0]= "Ёнерги€ по“1";
- Form1->StringGrid2->Cells[2][0]= "Ёнерги€ по“2";
- Form1->StringGrid2->Cells[3][0]= "Ёнерги€ по“3";
- Form1->StringGrid2->Cells[4][0]= "Ёнерги€ по“4" ;
- Form1->StringGrid2->Cells[5][0]= "Ёнерги€ по сумме тарифов";
+ Form1->StringGrid2->Cells[1][0]= "Ёнерги€ по“1, к¬“";
+ Form1->StringGrid2->Cells[2][0]= "Ёнерги€ по“2, к¬“";
+ Form1->StringGrid2->Cells[3][0]= "Ёнерги€ по“3, к¬“";
+ Form1->StringGrid2->Cells[4][0]= "Ёнерги€ по“4, к¬“" ;
+ Form1->StringGrid2->Cells[5][0]= "Ёнерги€ суммарна€, к¬“ ";
+
+ ComboBox1->ItemIndex=0;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
- //„тение мгновенной энергии
- SendData(0x08,0x03,0x01);
+ switch(ComboBox1->ItemIndex)
+ {
+  case 0:  //„тение мгновенной энергии
+  {
+   SendData(0x08,0x01,0x01);
+   break;
+  }
+  case 1:  //„тение энергии  на начало суток;
+  {
+   SendData(0x02,Count_Day,0x01);
+
+  // SendData(0x08,0x01,0x01);
+   break;
+  }
+  default:
+  {
+   ShowMessage("Ќеизвестный индекс: " + IntToStr(ComboBox1->ItemIndex));
+  }
+ }
+
+ 
 }
 //---------------------------------------------------------------------------
+
 
 

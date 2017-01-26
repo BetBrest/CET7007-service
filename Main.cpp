@@ -23,8 +23,10 @@ unsigned char IDP; //  request ID  1-byte
 unsigned char IDR; //  additional  request 1-byte
 
 
-bool Meter_connect=false;
-unsigned int KTU=1,KTI=1;
+bool Meter_connect=false;   // Flag of meter's connection
+unsigned int KTU=1,KTI=1;   // coefficient of transformation
+unsigned char Count_Day=0;  // Dept days archive,max 95;
+bool Packet_received=false; // Flag permission to send the next packet
 
 
 //---------------------------------------------------------------------------
@@ -38,7 +40,7 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 
 void __fastcall TForm1::N4Click(TObject *Sender)
 {
- Form1->Close();        
+ Form1->Close();
 }
 //---------------------------------------------------------------------------
 
@@ -50,14 +52,8 @@ void __fastcall TForm1::N2Click(TObject *Sender)
      ComPort1->LoadSettings(stIniFile, dir + "\\PortSettings.ini");
      ComPort1->ShowSetupDialog();
      ComPort1->StoreSettings(stIniFile, dir + "\\PortSettings.ini");
-
-
-
 }
-//---------------------------------------------------------------------------
-
-
-
+//--------------------------------------------------------------------------
 
 
 void __fastcall TForm1::Button2Click(TObject *Sender)
@@ -70,6 +66,7 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
    ComPort1->Open();
    SendData(0x00,0x00,0x01);
    Form1->Timer1->Enabled=true;
+   StatusBar1->SimpleText="Счетчик подключен";
   }
   else
   {
@@ -77,7 +74,9 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
    Button1->Enabled=false;
    Button2->Caption="Подключить";
    Label1->Caption="";
+   StatusBar1->SimpleText="Счетчик отключен";
   }
+
 }
 //---------------------------------------------------------------------------
 
@@ -95,6 +94,8 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
      {
      ComPort1->ClearBuffer(true, true);
      ShowMessage("Переполнение буффера");
+      memset(work_buffer,0,256);
+     read_byte=0;
      new_paket = true;
 
      return;
@@ -262,21 +263,30 @@ bool TForm1::DecodeInBuffer()
 
      break;
   }
- /* case 3:  // energy reading at the beginning of the day
+
+  case 3:  // energy reading at the beginning of the day
   {
-    if (IDR < 93)
-    {
-      if(!Energy_begining_day(IDR-int(days_between)))
-      return false;
-    }
-    else
-    {
-     ShowMessage("Неизвестный дополнительный идентефикатор пакета!Больше 93" );
-     return false;
-    }
+   if (IDR < 93)
+   {
+    KTU= (work_buffer[5]<<8)+work_buffer[6];
+    KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+    if (CheckBox1->Checked==false)  KTU=KTI=1;
+    StringGrid2->Cells[5][1+Count_Day]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
+    StringGrid2->Cells[1][1+Count_Day]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
+    StringGrid2->Cells[2][1+Count_Day]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
+    StringGrid2->Cells[3][1+Count_Day]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
+    StringGrid2->Cells[4][1+Count_Day]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
+    StringGrid2->Cells[0][1+Count_Day]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
+    Count_Day++;
+   }
+   else
+   {
+    ShowMessage("Неизвестный дополнительный идентефикатор пакета!Больше 95" );
+    return false;
+   }
      break;
   }
-
+   /*
   case 5:  // energy reading at the beginning of the day
   {
     if (IDR < 24 )
@@ -295,15 +305,16 @@ bool TForm1::DecodeInBuffer()
       {
        if(IDR==1)
        {
-       ShowMessage("Текущая энергия");
+      // ShowMessage("Текущая энергия");
        KTU= (work_buffer[5]<<8)+work_buffer[6];
        KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
-       StringGrid2->Cells[5][1]= (work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12];
-       StringGrid2->Cells[1][1]=(work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16];
-       StringGrid2->Cells[2][1]=(work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20];
-       StringGrid2->Cells[3][1]=(work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24];
-       StringGrid2->Cells[4][1]=(work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28];
-
+       if (CheckBox1->Checked==false)  KTU=KTI=1;
+       StringGrid2->Cells[5][1]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
+       StringGrid2->Cells[1][1]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
+       StringGrid2->Cells[2][1]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
+       StringGrid2->Cells[3][1]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
+       StringGrid2->Cells[4][1]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
+       StringGrid2->Cells[0][1]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
 
        }
        else
@@ -438,19 +449,47 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 {
  Button1->Enabled=false;
  Form1->StringGrid2->Cells[0][0]= "Дата/время";
- Form1->StringGrid2->Cells[1][0]= "Энергия поТ1";
- Form1->StringGrid2->Cells[2][0]= "Энергия поТ2";
- Form1->StringGrid2->Cells[3][0]= "Энергия поТ3";
- Form1->StringGrid2->Cells[4][0]= "Энергия поТ4" ;
- Form1->StringGrid2->Cells[5][0]= "Энергия по сумме тарифов";
+ Form1->StringGrid2->Cells[1][0]= "Энергия поТ1, кВТ";
+ Form1->StringGrid2->Cells[2][0]= "Энергия поТ2, кВТ";
+ Form1->StringGrid2->Cells[3][0]= "Энергия поТ3, кВТ";
+ Form1->StringGrid2->Cells[4][0]= "Энергия поТ4, кВТ" ;
+ Form1->StringGrid2->Cells[5][0]= "Энергия суммарная, кВТ ";
+
+ ComboBox1->ItemIndex=0;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
- //Чтение мгновенной энергии
- SendData(0x08,0x01,0x01);
+ // Очистка Stringrid2
+ for (int i = 0; i < StringGrid2->ColCount; i++)
+ for (int j = 1; j < StringGrid2->RowCount; j++)
+ StringGrid2->Cells[i][j] = "";
+
+
+ switch(ComboBox1->ItemIndex)
+ {
+  case 0:  //Чтение мгновенной энергии
+  {
+   SendData(0x08,0x01,0x01);
+   break;
+  }
+  case 1:  //Чтение энергии  на начало суток;
+  {
+   SendData(0x02,Count_Day,0x01);
+
+  // SendData(0x08,0x01,0x01);
+   break;
+  }
+  default:
+  {
+   ShowMessage("Неизвестный индекс: " + IntToStr(ComboBox1->ItemIndex));
+  }
+ }
+
+ 
 }
 //---------------------------------------------------------------------------
+
 
 
