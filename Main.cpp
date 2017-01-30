@@ -118,27 +118,11 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
           new_paket = true;
           read_byte=0;
 
-         if (Packet_Send  )
+         if (Count_Day<95 && Packet_received  )
          {
-          if(flag_IDP==2)
-          {
-          Sleep(50);
-      //    SendData(0x02,Packet_Send+int(days_between),GetCurrentNA());
-          Packet_Send--;
-        //  if (!Packet_Send)
-       //   DataToGrid=true;
-    //      ProgressBar1->Position= Day-Packet_Send;
-          }
-
-          if(flag_IDP==4)
-           {
-          Sleep(50);
-       //   SendData(0x04,Packet_Send+Month_Offset,GetCurrentNA());
-          Packet_Send--;
-        // if (!Packet_Send)
-       //   DataToGrid2=true;
-        //  ProgressBar1->Position= months_between-Packet_Send;
-          }
+           Packet_received=false;
+           Sleep(100);
+           SendData(0x02,Count_Day,0x01);
 
          }
          else
@@ -211,12 +195,48 @@ unsigned short TForm1::CRC16b(unsigned char *msg, int len)
 bool TForm1::DecodeInBuffer()
 {
 //***********  Check CRC *******************************************************
-  if (!CRC16b(&work_buffer[0],work_buffer[0]))  ;
-  else
-  {
-   ShowMessage("ќшибка контрольной суммы!!!" + IntToStr(CRC16b(&work_buffer[0],work_buffer[0]-2)));
+ if (!CRC16b(&work_buffer[0],work_buffer[0]))  ;
+ else
+ {
+  ShowMessage("ќшибка контрольной суммы!!!" + IntToStr(CRC16b(&work_buffer[0],work_buffer[0]-2)));
   return false;
+ }
+//***********  Check Error packet***********************************************
+ if (work_buffer[0]==0x0A && work_buffer[5]==0xAA && work_buffer[7]==0xAA)
+ {
+  switch(work_buffer[6])
+  {
+   case 1:
+   StatusBar1->SimpleText="ќшибка доступа к микросхеме (EEPROM) пам€ти";
+   break;
+   case 2:
+   StatusBar1->SimpleText="Ќеизвестна€ команда";
+   break;
+   case 4:
+   StatusBar1->SimpleText="“ребуетс€ подтверждение парол€ безопасности";
+   break;
+   case 8:
+   StatusBar1->SimpleText="ѕароль безопасности не прин€т";
+   break;
+   case 16:
+   StatusBar1->SimpleText="ѕароль безопасности не требуетс€";
+   break;
+   case 32:
+   StatusBar1->SimpleText="ƒанные отсутсвуют в архиве";
+   break;
+   case 64:
+   StatusBar1->SimpleText="«аписываемые данные не соответсвуют допустимым";
+   break;
+   case 128:
+   StatusBar1->SimpleText="ќшибка размера пакета устанавливаемых данных";
+   break;
+   default:
+   StatusBar1->SimpleText="Ќеизвестна€ ошибка!";
   }
+  ShowMessage("ќшибка передачи пакета!!! код: " + IntToStr(work_buffer[6]));
+
+  return false;
+ }
 
 //************** Chek Net Adress ***********************************************
 
@@ -278,6 +298,8 @@ bool TForm1::DecodeInBuffer()
     StringGrid2->Cells[4][1+Count_Day]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
     StringGrid2->Cells[0][1+Count_Day]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
     Count_Day++;
+    Packet_received=true;
+
    }
    else
    {
@@ -449,11 +471,11 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 {
  Button1->Enabled=false;
  Form1->StringGrid2->Cells[0][0]= "ƒата/врем€";
- Form1->StringGrid2->Cells[1][0]= "Ёнерги€ по“1, к¬“";
- Form1->StringGrid2->Cells[2][0]= "Ёнерги€ по“2, к¬“";
- Form1->StringGrid2->Cells[3][0]= "Ёнерги€ по“3, к¬“";
- Form1->StringGrid2->Cells[4][0]= "Ёнерги€ по“4, к¬“" ;
- Form1->StringGrid2->Cells[5][0]= "Ёнерги€ суммарна€, к¬“ ";
+ Form1->StringGrid2->Cells[1][0]= "Ёнерги€ по“1, к¬т";
+ Form1->StringGrid2->Cells[2][0]= "Ёнерги€ по“2, к¬т";
+ Form1->StringGrid2->Cells[3][0]= "Ёнерги€ по“3, к¬т";
+ Form1->StringGrid2->Cells[4][0]= "Ёнерги€ по“4, к¬т" ;
+ Form1->StringGrid2->Cells[5][0]= "Ёнерги€ суммарна€, к¬т ";
 
  ComboBox1->ItemIndex=0;
 }
@@ -476,9 +498,12 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
   }
   case 1:  //„тение энергии  на начало суток;
   {
-   SendData(0x02,Count_Day,0x01);
 
-  // SendData(0x08,0x01,0x01);
+     SendData(0x02,Count_Day,0x01);
+ //   Packet_received=false;
+//   while(Count_Day< 95)
+//   if (Packet_received)
+ //  SendData(0x02,Count_Day,0x01);
    break;
   }
   default:
