@@ -1,9 +1,10 @@
 object Form1: TForm1
-  Left = 209
+  Left = 310
   Top = 114
-  Width = 937
-  Height = 716
+  BorderStyle = bsSingle
   Caption = #1063#1090#1077#1085#1080#1077' '#1072#1088#1093#1080#1074#1072' '#1057#1069#1058'7007 '#1095#1077#1088#1077#1079' '#1086#1087#1090#1086#1087#1086#1088#1090
+  ClientHeight = 662
+  ClientWidth = 929
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -32,8 +33,8 @@ object Form1: TForm1
     Top = 40
     Width = 905
     Height = 601
-    ActivePage = TabSheet1
-    TabIndex = 0
+    ActivePage = TabSheet2
+    TabIndex = 1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #1040#1088#1093#1080#1074' '#1101#1085#1077#1088#1075#1080#1080
@@ -41,9 +42,9 @@ object Form1: TForm1
         897
         573)
       object ComboBox1: TComboBox
-        Left = 8
+        Left = 16
         Top = 8
-        Width = 145
+        Width = 161
         Height = 21
         AutoComplete = False
         Style = csDropDownList
@@ -57,9 +58,9 @@ object Form1: TForm1
       end
       object StringGrid2: TStringGrid
         Left = 16
-        Top = 48
+        Top = 40
         Width = 865
-        Height = 505
+        Height = 513
         Anchors = [akLeft, akTop, akBottom]
         BiDiMode = bdLeftToRight
         ColCount = 6
@@ -84,7 +85,7 @@ object Form1: TForm1
       end
       object CheckBox1: TCheckBox
         Left = 232
-        Top = 8
+        Top = 10
         Width = 297
         Height = 17
         Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1074#1074#1077#1076#1077#1085#1085#1099#1077' '#1082#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1090#1088#1072#1085#1089#1092#1086#1088#1084#1072#1094#1080#1080
@@ -95,9 +96,9 @@ object Form1: TForm1
       Caption = #1040#1088#1093#1080#1074' '#1084#1086#1097#1085#1086#1089#1090#1080
       ImageIndex = 1
       object ComboBox2: TComboBox
-        Left = 8
+        Left = 16
         Top = 8
-        Width = 145
+        Width = 177
         Height = 21
         ItemHeight = 13
         TabOrder = 0
@@ -108,15 +109,15 @@ object Form1: TForm1
           #1085#1072' '#1085#1072#1095#1072#1083#1086' '#1075#1086#1076#1072)
       end
       object StringGrid1: TStringGrid
-        Left = 24
-        Top = 56
+        Left = 16
+        Top = 40
         Width = 849
-        Height = 297
+        Height = 521
         TabOrder = 1
       end
       object Button3: TButton
         Left = 768
-        Top = 16
+        Top = 4
         Width = 97
         Height = 25
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1072#1088#1093#1080#1074
@@ -126,7 +127,7 @@ object Form1: TForm1
   end
   object Button1: TButton
     Left = 689
-    Top = 82
+    Top = 69
     Width = 91
     Height = 25
     Caption = #1057#1095#1080#1090#1072#1090#1100' '#1072#1088#1093#1080#1074

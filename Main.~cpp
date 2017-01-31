@@ -26,6 +26,8 @@ unsigned char IDR; //  additional  request 1-byte
 bool Meter_connect=false;   // Flag of meter's connection
 unsigned int KTU=1,KTI=1;   // coefficient of transformation
 unsigned char Count_Day=0;  // Dept days archive,max 95;
+unsigned char Count_Month=0;  // Dept months archive,max 23;
+unsigned char Count_Year=0;  // Dept years archive,max 5;
 bool Packet_received=false; // Flag permission to send the next packet
 
 
@@ -118,28 +120,32 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
           new_paket = true;
           read_byte=0;
 
-         if (Packet_Send  )
+         if (IDP==03 && Count_Day<95 && Packet_received  )
          {
-          if(flag_IDP==2)
-          {
-          Sleep(50);
-      //    SendData(0x02,Packet_Send+int(days_between),GetCurrentNA());
-          Packet_Send--;
-        //  if (!Packet_Send)
-       //   DataToGrid=true;
-    //      ProgressBar1->Position= Day-Packet_Send;
-          }
+           Packet_received=false;
+           Sleep(100);
+           SendData(0x02,Count_Day,0x01);
+         }
+         else
+        { 
+       //  Timer1->Enabled=true;
+        }
 
-          if(flag_IDP==4)
-           {
-          Sleep(50);
-       //   SendData(0x04,Packet_Send+Month_Offset,GetCurrentNA());
-          Packet_Send--;
-        // if (!Packet_Send)
-       //   DataToGrid2=true;
-        //  ProgressBar1->Position= months_between-Packet_Send;
-          }
-
+          if (IDP==05 && Count_Month<23 && Packet_received  )
+         {
+           Packet_received=false;
+           Sleep(100);
+           SendData(0x04,Count_Month,0x01);
+         }
+         else
+        {
+       //  Timer1->Enabled=true;
+        }
+          if (IDP==07 && Count_Year<5 && Packet_received  )
+         {
+           Packet_received=false;
+           Sleep(100);
+           SendData(0x06,Count_Year,0x01);
          }
          else
         {
@@ -239,6 +245,9 @@ bool TForm1::DecodeInBuffer()
    break;
    case 32:
    StatusBar1->SimpleText="Данные отсутсвуют в архиве";
+   Count_Day=0;
+   Count_Month=0;
+   Count_Year=0;
    break;
    case 64:
    StatusBar1->SimpleText="Записываемые данные не соответсвуют допустимым";
@@ -249,7 +258,7 @@ bool TForm1::DecodeInBuffer()
    default:
    StatusBar1->SimpleText="Неизвестная ошибка!";
   }
-  ShowMessage("Ошибка передачи пакета!!! код: " + IntToStr(work_buffer[6]));
+// ShowMessage("Ошибка передачи пакета!!! код: " + IntToStr(work_buffer[6]));
 
   return false;
  }
@@ -314,6 +323,8 @@ bool TForm1::DecodeInBuffer()
     StringGrid2->Cells[4][1+Count_Day]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
     StringGrid2->Cells[0][1+Count_Day]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
     Count_Day++;
+    Packet_received=true;
+
    }
    else
    {
@@ -322,21 +333,56 @@ bool TForm1::DecodeInBuffer()
    }
      break;
   }
-   /*
-  case 5:  // energy reading at the beginning of the day
+
+  case 5:  // energy reading at the beginning of the month
   {
-    if (IDR < 24 )
-    {
-      if(!Energy_begining_month(IDR-Month_Offset))
-      return false;
-    }
-    else
-    {
-     ShowMessage("Неизвестный дополнительный идентефикатор пакета!Больше 24");
-     return false;
-    }
+     if (IDR < 23)
+   {
+    KTU= (work_buffer[5]<<8)+work_buffer[6];
+    KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+    if (CheckBox1->Checked==false)  KTU=KTI=1;
+    StringGrid2->Cells[5][1+Count_Month]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
+    StringGrid2->Cells[1][1+Count_Month]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
+    StringGrid2->Cells[2][1+Count_Month]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
+    StringGrid2->Cells[3][1+Count_Month]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
+    StringGrid2->Cells[4][1+Count_Month]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
+    StringGrid2->Cells[0][1+Count_Month]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
+    Count_Month++;
+    Packet_received=true;
+
+   }
+   else
+   {
+    ShowMessage("Неизвестный дополнительный идентефикатор пакета!Больше 23" );
+    return false;
+   }
      break;
-  }  */
+  }
+
+    case 7:  // energy reading at the beginning of the yers
+  {
+     if (IDR < 5)
+   {
+    KTU= (work_buffer[5]<<8)+work_buffer[6];
+    KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+    if (CheckBox1->Checked==false)  KTU=KTI=1;
+    StringGrid2->Cells[5][1+Count_Year]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
+    StringGrid2->Cells[1][1+Count_Year]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
+    StringGrid2->Cells[2][1+Count_Year]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
+    StringGrid2->Cells[3][1+Count_Year]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
+    StringGrid2->Cells[4][1+Count_Year]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
+    StringGrid2->Cells[0][1+Count_Year]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
+    Count_Year++;
+    Packet_received=true;
+
+   }
+   else
+   {
+    ShowMessage("Неизвестный дополнительный идентефикатор пакета!Больше 5" );
+    return false;
+   }
+     break;
+  }
   case 9:  //  Reading current energy savings
       {
        if(IDR==1)
@@ -485,11 +531,11 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 {
  Button1->Enabled=false;
  Form1->StringGrid2->Cells[0][0]= "Дата/время";
- Form1->StringGrid2->Cells[1][0]= "Энергия поТ1, кВТ";
- Form1->StringGrid2->Cells[2][0]= "Энергия поТ2, кВТ";
- Form1->StringGrid2->Cells[3][0]= "Энергия поТ3, кВТ";
- Form1->StringGrid2->Cells[4][0]= "Энергия поТ4, кВТ" ;
- Form1->StringGrid2->Cells[5][0]= "Энергия суммарная, кВТ ";
+ Form1->StringGrid2->Cells[1][0]= "Энергия поТ1, кВт";
+ Form1->StringGrid2->Cells[2][0]= "Энергия поТ2, кВт";
+ Form1->StringGrid2->Cells[3][0]= "Энергия поТ3, кВт";
+ Form1->StringGrid2->Cells[4][0]= "Энергия поТ4, кВт" ;
+ Form1->StringGrid2->Cells[5][0]= "Энергия суммарная, кВт ";
 
  ComboBox1->ItemIndex=0;
 }
@@ -507,14 +553,26 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
  {
   case 0:  //Чтение мгновенной энергии
   {
+   StatusBar1->SimpleText="Чтение текущих показаний энергии";
    SendData(0x08,0x01,0x01);
    break;
   }
   case 1:  //Чтение энергии  на начало суток;
   {
    SendData(0x02,Count_Day,0x01);
-
-  // SendData(0x08,0x01,0x01);
+   StatusBar1->SimpleText="Чтение показаний энергии на начало суток" ;
+   break;
+  }
+  case 2:  //Чтение энергии  на начало месяца;
+  {
+   SendData(0x04,Count_Month,0x01);
+   StatusBar1->SimpleText="Чтение показаний энергии на начало месяца" ;
+   break;
+  }
+  case 3:  //Чтение энергии  на начало года;
+  {
+   SendData(0x06,Count_Year,0x01);
+   StatusBar1->SimpleText="Чтение показаний энергии на начало года" ;
    break;
   }
   default:
@@ -523,7 +581,7 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
   }
  }
 
- 
+
 }
 //---------------------------------------------------------------------------
 
