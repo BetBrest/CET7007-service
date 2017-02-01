@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 310
-  Top = 114
+  Left = 381
+  Top = 100
   BorderStyle = bsSingle
   Caption = #1063#1090#1077#1085#1080#1077' '#1072#1088#1093#1080#1074#1072' '#1057#1069#1058'7007 '#1095#1077#1088#1077#1079' '#1086#1087#1090#1086#1087#1086#1088#1090
   ClientHeight = 662
@@ -33,8 +33,8 @@ object Form1: TForm1
     Top = 40
     Width = 905
     Height = 601
-    ActivePage = TabSheet2
-    TabIndex = 1
+    ActivePage = TabSheet1
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #1040#1088#1093#1080#1074' '#1101#1085#1077#1088#1075#1080#1080
@@ -42,9 +42,9 @@ object Form1: TForm1
         897
         573)
       object ComboBox1: TComboBox
-        Left = 16
+        Left = 0
         Top = 8
-        Width = 161
+        Width = 177
         Height = 21
         AutoComplete = False
         Style = csDropDownList
@@ -57,9 +57,9 @@ object Form1: TForm1
           #1053#1072' '#1085#1072#1095#1072#1083#1086' '#1075#1086#1076#1072)
       end
       object StringGrid2: TStringGrid
-        Left = 16
+        Left = 0
         Top = 40
-        Width = 865
+        Width = 881
         Height = 513
         Anchors = [akLeft, akTop, akBottom]
         BiDiMode = bdLeftToRight
@@ -96,7 +96,7 @@ object Form1: TForm1
       Caption = #1040#1088#1093#1080#1074' '#1084#1086#1097#1085#1086#1089#1090#1080
       ImageIndex = 1
       object ComboBox2: TComboBox
-        Left = 16
+        Left = 0
         Top = 8
         Width = 177
         Height = 21
@@ -109,11 +109,21 @@ object Form1: TForm1
           #1085#1072' '#1085#1072#1095#1072#1083#1086' '#1075#1086#1076#1072)
       end
       object StringGrid1: TStringGrid
-        Left = 16
+        Left = 0
         Top = 40
-        Width = 849
+        Width = 865
         Height = 521
+        ColCount = 6
+        FixedCols = 0
+        RowCount = 91
         TabOrder = 1
+        ColWidths = (
+          137
+          135
+          135
+          135
+          136
+          158)
       end
       object Button3: TButton
         Left = 768
