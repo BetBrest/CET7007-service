@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 381
-  Top = 100
+  Left = 366
+  Top = 142
   BorderStyle = bsSingle
   Caption = #1063#1090#1077#1085#1080#1077' '#1072#1088#1093#1080#1074#1072' '#1057#1069#1058'7007 '#1095#1077#1088#1077#1079' '#1086#1087#1090#1086#1087#1086#1088#1090
   ClientHeight = 662
@@ -125,20 +125,12 @@ object Form1: TForm1
           136
           158)
       end
-      object Button3: TButton
-        Left = 768
-        Top = 4
-        Width = 97
-        Height = 25
-        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1072#1088#1093#1080#1074
-        TabOrder = 2
-      end
     end
   end
   object Button1: TButton
-    Left = 689
+    Left = 642
     Top = 69
-    Width = 91
+    Width = 117
     Height = 25
     Caption = #1057#1095#1080#1090#1072#1090#1100' '#1072#1088#1093#1080#1074
     TabOrder = 1
@@ -161,8 +153,17 @@ object Form1: TForm1
     Panels = <>
     SimplePanel = False
   end
+  object Button3: TButton
+    Left = 767
+    Top = 68
+    Width = 113
+    Height = 25
+    Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074' EXCEL'
+    TabOrder = 4
+    OnClick = Button3Click
+  end
   object MainMenu1: TMainMenu
-    Left = 736
+    Left = 720
     object N3: TMenuItem
       Caption = #1060#1072#1081#1083
       object N4: TMenuItem
@@ -194,12 +195,11 @@ object Form1: TForm1
     StoredProps = [spBasic]
     TriggersOnRxChar = True
     OnRxChar = ComPort1RxChar
-    Left = 776
+    Left = 752
   end
   object Timer1: TTimer
     Enabled = False
     OnTimer = Timer1Timer
-    Left = 680
-    Top = 8
+    Left = 688
   end
 end

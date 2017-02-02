@@ -531,11 +531,18 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 {
  Button1->Enabled=false;
  Form1->StringGrid2->Cells[0][0]= "ƒата/врем€";
- Form1->StringGrid2->Cells[1][0]= "Ёнерги€ по“1, к¬т";
- Form1->StringGrid2->Cells[2][0]= "Ёнерги€ по“2, к¬т";
- Form1->StringGrid2->Cells[3][0]= "Ёнерги€ по“3, к¬т";
- Form1->StringGrid2->Cells[4][0]= "Ёнерги€ по“4, к¬т" ;
- Form1->StringGrid2->Cells[5][0]= "Ёнерги€ суммарна€, к¬т ";
+ Form1->StringGrid2->Cells[1][0]= "Ёнерги€ по“1, к¬т/ч";
+ Form1->StringGrid2->Cells[2][0]= "Ёнерги€ по“2, к¬т/ч";
+ Form1->StringGrid2->Cells[3][0]= "Ёнерги€ по“3, к¬т/ч";
+ Form1->StringGrid2->Cells[4][0]= "Ёнерги€ по“4, к¬т/ч" ;
+ Form1->StringGrid2->Cells[5][0]= "Ёнерги€ суммарна€, к¬т/ч ";
+
+ Form1->StringGrid1->Cells[0][0]= "ƒата/врем€";
+ Form1->StringGrid1->Cells[1][0]= "¬рем€/мощность “1, к¬т";
+ Form1->StringGrid1->Cells[2][0]= "¬рем€/мощность “2, к¬т";
+ Form1->StringGrid1->Cells[3][0]= "¬рем€/мощность “3, к¬т";
+ Form1->StringGrid1->Cells[4][0]= "¬рем€/мощность “4, к¬т" ;
+ Form1->StringGrid1->Cells[5][0]= "¬рем€/мощность обща€, к¬т ";
 
  ComboBox1->ItemIndex=0;
 }
@@ -547,8 +554,12 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
  for (int i = 0; i < StringGrid2->ColCount; i++)
  for (int j = 1; j < StringGrid2->RowCount; j++)
  StringGrid2->Cells[i][j] = "";
+  // ќчистка Stringrid2
+ for (int i = 0; i < StringGrid1->ColCount; i++)
+ for (int j = 1; j < StringGrid1->RowCount; j++)
+ StringGrid1->Cells[i][j] = "";
 
-
+ if(PageControl1->ActivePage==TabSheet1)
  switch(ComboBox1->ItemIndex)
  {
   case 0:  //„тение мгновенной энергии
@@ -577,7 +588,40 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
   }
   default:
   {
-   ShowMessage("Ќеизвестный индекс: " + IntToStr(ComboBox1->ItemIndex));
+   ShowMessage("Ќеизвестный индекс энергии: " + IntToStr(ComboBox1->ItemIndex));
+  }
+ }
+
+ if(PageControl1->ActivePage==TabSheet2)
+ switch(ComboBox1->ItemIndex)
+ {
+  case 0:  //„тение мгновенной мощности
+  {
+   StatusBar1->SimpleText="„тение текущей мощности";
+   SendData(0x08,0x01,0x01);
+   break;
+  }
+ /* case 1:  //„тение энергии  на начало суток;
+  {
+   SendData(0x02,Count_Day,0x01);
+   StatusBar1->SimpleText="„тение показаний энергии на начало суток" ;
+   break;
+  }
+  case 2:  //„тение энергии  на начало мес€ца;
+  {
+   SendData(0x04,Count_Month,0x01);
+   StatusBar1->SimpleText="„тение показаний энергии на начало мес€ца" ;
+   break;
+  }
+  case 3:  //„тение энергии  на начало года;
+  {
+   SendData(0x06,Count_Year,0x01);
+   StatusBar1->SimpleText="„тение показаний энергии на начало года" ;
+   break;
+  }       */
+  default:
+  {
+   ShowMessage("Ќеизвестный индекс мощности: " + IntToStr(ComboBox1->ItemIndex));
   }
  }
 
