@@ -651,8 +651,8 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
 {
 
   // устанавливаем путь к файлу шаблона
-     AnsiString sFile = ExtractFilePath(Application->ExeName)+"\\blank.xlt";
-
+     AnsiString sFile = ExtractFilePath(Application->ExeName)+"\\ACT.xlt";
+     AnsiString  datenumber="1";
      // инициализируем Excel, открываем этот шаблон
      try {
        App=Variant::GetActiveObject("Excel.Application");
@@ -673,16 +673,18 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
 
 
 
-  for (int i=0;i<50;i++)
+  for (int i=1;i<50;i++)
   for (int j=0;j<10;j++)
-  toExcelCell(i+1,j+1,StringGrid2->Cells[j][i]);
+  toExcelCell(i+7,j+1,StringGrid2->Cells[j][i]);
   // освобождаем ресурсы
 
-    App.OlePropertySet("Visible",true);
-    Sh.Clear();
+App.OlePropertySet("Visible",true);
+AnsiString  aaa= ExtractFilePath(Application->ExeName)+"Архивы\\"+ datenumber +".xls";
+
+App.OlePropertyGet("WorkSheets",1).OleProcedure("SaveAs",aaa.c_str());
+
+        Sh.Clear();
     App.Clear();
-
-
 
 }
 //---------------------------------------------------------------------------

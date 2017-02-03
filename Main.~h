@@ -63,12 +63,12 @@ __published:	// IDE-managed Components
         TComboBox *ComboBox2;
         TButton *Button2;
         TStringGrid *StringGrid1;
-        TButton *Button3;
         TTimer *Timer1;
         TStringGrid *StringGrid2;
         TLabel *Label1;
         TCheckBox *CheckBox1;
         TStatusBar *StatusBar1;
+        TButton *Button3;
         void __fastcall N4Click(TObject *Sender);
         void __fastcall N2Click(TObject *Sender);
         void __fastcall Button2Click(TObject *Sender);
@@ -76,14 +76,17 @@ __published:	// IDE-managed Components
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
+        void __fastcall Button3Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
+        Variant App,Sh;
         SendData(unsigned char, unsigned char, unsigned char);
         unsigned short CRC16b(unsigned char *, int);   //   Chek sum
         bool DecodeInBuffer();
-        bool __fastcall ReadSysPar();   //   true - if decode is right, else - false
-
+        bool __fastcall ReadSysPar();         //   true - if decode is right, else - false
+        String IntPlusZero(unsigned char);    // return format X -> 0X, for date/time
+        void __fastcall toExcelCell(int ,int, AnsiString );   // return format X -> 0X, for date/time
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;

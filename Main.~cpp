@@ -47,6 +47,15 @@ void __fastcall TForm1::N4Click(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
+void __fastcall TForm1::toExcelCell(int Row,int Column, AnsiString data)
+{
+  try {
+    Variant  cur = Sh.OlePropertyGet("Cells", Row,Column);
+    cur.OlePropertySet("Value", data.c_str());
+  } catch(...) { ; }
+}/* toExcelCell() */
+
+
 void __fastcall TForm1::N2Click(TObject *Sender)
 {
 //Form2->Visible=true;
@@ -321,7 +330,7 @@ bool TForm1::DecodeInBuffer()
     StringGrid2->Cells[2][1+Count_Day]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
     StringGrid2->Cells[3][1+Count_Day]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
     StringGrid2->Cells[4][1+Count_Day]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
-    StringGrid2->Cells[0][1+Count_Day]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
+    StringGrid2->Cells[0][1+Count_Day]= IntPlusZero(work_buffer[33])+ "-" + IntPlusZero(work_buffer[34])+ "-20" + IntPlusZero(work_buffer[35])+ " " + IntPlusZero(work_buffer[31]) + ":" +IntPlusZero(work_buffer[30])+ ":" + IntPlusZero(work_buffer[29]);
     Count_Day++;
     Packet_received=true;
 
@@ -346,7 +355,7 @@ bool TForm1::DecodeInBuffer()
     StringGrid2->Cells[2][1+Count_Month]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
     StringGrid2->Cells[3][1+Count_Month]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
     StringGrid2->Cells[4][1+Count_Month]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
-    StringGrid2->Cells[0][1+Count_Month]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
+    StringGrid2->Cells[0][1+Count_Month]= IntPlusZero(work_buffer[33])+ "-" + IntPlusZero(work_buffer[34])+ "-20" + IntPlusZero(work_buffer[35])+ " " + IntPlusZero(work_buffer[31]) + ":" +IntPlusZero(work_buffer[30])+ ":" + IntPlusZero(work_buffer[29]);
     Count_Month++;
     Packet_received=true;
 
@@ -371,7 +380,7 @@ bool TForm1::DecodeInBuffer()
     StringGrid2->Cells[2][1+Count_Year]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
     StringGrid2->Cells[3][1+Count_Year]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
     StringGrid2->Cells[4][1+Count_Year]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
-    StringGrid2->Cells[0][1+Count_Year]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
+    StringGrid2->Cells[0][1+Count_Year]= IntPlusZero(work_buffer[33])+ "-" + IntPlusZero(work_buffer[34])+ "-20" + IntPlusZero(work_buffer[35])+ " " + IntPlusZero(work_buffer[31]) + ":" +IntPlusZero(work_buffer[30])+ ":" + IntPlusZero(work_buffer[29]);
     Count_Year++;
     Packet_received=true;
 
@@ -396,9 +405,7 @@ bool TForm1::DecodeInBuffer()
        StringGrid2->Cells[2][1]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
        StringGrid2->Cells[3][1]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
        StringGrid2->Cells[4][1]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
-       StringGrid2->Cells[0][1]= IntToStr(work_buffer[33])+ "-" + IntToStr(work_buffer[34])+ "-20" + IntToStr(work_buffer[35])+ " " + IntToStr(work_buffer[31]) + ":" +IntToStr(work_buffer[30])+ ":" + IntToStr(work_buffer[29]);
-
-       }
+       StringGrid2->Cells[0][1+Count_Day]= IntPlusZero(work_buffer[33])+ "-" + IntPlusZero(work_buffer[34])+ "-20" + IntPlusZero(work_buffer[35])+ " " + IntPlusZero(work_buffer[31]) + ":" +IntPlusZero(work_buffer[30])+ ":" + IntPlusZero(work_buffer[29]);       }
        else
        {
         ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
@@ -630,4 +637,55 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
+
+
+String TForm1::IntPlusZero(unsigned char buf)
+{
+ String s;
+ s=IntToStr(buf);
+ if (buf<10)
+ s="0"+s;
+ return s;
+}
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+
+  // устанавливаем путь к файлу шаблона
+     AnsiString sFile = ExtractFilePath(Application->ExeName)+"\\ACT.xlt";
+     AnsiString  datenumber="1";
+     // инициализируем Excel, открываем этот шаблон
+     try {
+       App=Variant::GetActiveObject("Excel.Application");
+     } catch(...) {
+     try { App=Variant::CreateObject("Excel.Application"); }
+     catch (...) {
+      Application->MessageBox("Невозможно открыть Microsoft Excel!"
+      " Возможно этого приложения на компьютере не установлено.","Ошибка",MB_OK+MB_ICONERROR);
+        }}
+     try {
+      App.OlePropertyGet("WorkBooks").OleProcedure("Open",sFile.c_str(),0,false,1);
+      Sh=App.OlePropertyGet("WorkSheets",1);
+     } catch(...) {
+      Application->MessageBox("Ошибка открытия шаблона Microsoft Excel!","Ошибка",MB_OK+MB_ICONERROR);
+     }
+
+
+
+
+
+  for (int i=1;i<50;i++)
+  for (int j=0;j<10;j++)
+  toExcelCell(i+7,j+1,StringGrid2->Cells[j][i]);
+  // освобождаем ресурсы
+
+App.OlePropertySet("Visible",true);
+AnsiString  aaa= ExtractFilePath(Application->ExeName)+"Архивы\\"+ datenumber +".xls";
+
+App.OlePropertyGet("WorkSheets",1).OleProcedure("SaveAs",aaa.c_str());
+
+        Sh.Clear();
+    App.Clear();
+
+}
+//---------------------------------------------------------------------------
 
