@@ -29,6 +29,8 @@ unsigned char Count_Day=0;  // Dept days archive,max 95;
 unsigned char Count_Month=0;  // Dept months archive,max 23;
 unsigned char Count_Year=0;  // Dept years archive,max 5;
 bool Packet_received=false; // Flag permission to send the next packet
+unsigned int Factory_Number=0;
+AnsiString Short_info="";
 
 
 //---------------------------------------------------------------------------
@@ -435,7 +437,7 @@ bool __fastcall TForm1::ReadSysPar()
  AnsiString Ver_Protocol="";
  AnsiString Ver_Soft="";
  AnsiString Release_Date="";
- unsigned int Factory_Number=0;
+
 // unsigned int Meter_Status=0;
 
  //************ Read Type of meters *********************************************
@@ -445,12 +447,16 @@ bool __fastcall TForm1::ReadSysPar()
  InfoMeters+="Unknow Type ";
 
  InfoMeters+=  IntToStr((work_buffer[6]<<8) + work_buffer[7]); //read number index
+ Short_info= InfoMeters;
  InfoMeters+="      Класс точности: " ;
 
  InfoMeters+=  FloatToStr(float(work_buffer[8])/100) ; //read accuracy class
 
  InfoMeters+= "     (";
  InfoMeters+= IntToStr(work_buffer[9]); //read nominal current
+
+ Short_info+= "     (" + IntToStr(work_buffer[9])+  " - " +IntToStr(work_buffer[10] ) + ") A ";
+
 
  InfoMeters+= " - ";
  InfoMeters+= IntToStr(work_buffer[10]); //read max current
@@ -668,10 +674,16 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
      } catch(...) {
       Application->MessageBox("Ошибка открытия шаблона Microsoft Excel!","Ошибка",MB_OK+MB_ICONERROR);
      }
+    App.OlePropertySet("DisplayAlerts",true) ;
 
-
-
-
+   if(PageControl1->ActivePage==TabSheet1)
+   datenumber=Now().FormatString("dd.mm.yy - ") + IntToStr(Factory_Number)+ "_" + IntToStr(ComboBox1->ItemIndex);
+   else
+   datenumber=Now().FormatString("dd.mm.yy - ") + IntToStr(Factory_Number);
+   if (PageControl1->ActivePage==TabSheet1)
+   toExcelCell(2,1,ComboBox1->Text);
+   toExcelCell(3,3,Short_info);
+   toExcelCell(4,3,IntToStr(Factory_Number));
 
   for (int i=1;i<50;i++)
   for (int j=0;j<10;j++)
@@ -680,9 +692,13 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
 
 App.OlePropertySet("Visible",true);
 AnsiString  aaa= ExtractFilePath(Application->ExeName)+"Архивы\\"+ datenumber +".xls";
-
+  try {
 App.OlePropertyGet("WorkSheets",1).OleProcedure("SaveAs",aaa.c_str());
-
+   } catch(...) {
+      //Application->MessageBox("Закройте файл Excel и повторите попытку","Ошибка2",MB_OK+MB_ICONERROR);
+      App.OlePropertySet("DisplayAlerts",false);   //Отключить вывод сообщений с вопросами типа "Заменить файл..."
+      App.OleProcedure("Quit");    //close excel
+     }
         Sh.Clear();
     App.Clear();
 
