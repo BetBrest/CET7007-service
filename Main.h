@@ -66,9 +66,9 @@ __published:	// IDE-managed Components
         TTimer *Timer1;
         TStringGrid *StringGrid2;
         TLabel *Label1;
-        TCheckBox *CheckBox1;
         TStatusBar *StatusBar1;
         TButton *Button3;
+        TCheckBox *CheckBox1;
         void __fastcall N4Click(TObject *Sender);
         void __fastcall N2Click(TObject *Sender);
         void __fastcall Button2Click(TObject *Sender);

@@ -398,20 +398,37 @@ bool TForm1::DecodeInBuffer()
       {
        if(IDR==1)
        {
-      // ShowMessage("Текущая энергия");
-       KTU= (work_buffer[5]<<8)+work_buffer[6];
-       KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
-       if (CheckBox1->Checked==false)  KTU=KTI=1;
-       StringGrid2->Cells[5][1]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
-       StringGrid2->Cells[1][1]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
-       StringGrid2->Cells[2][1]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
-       StringGrid2->Cells[3][1]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
-       StringGrid2->Cells[4][1]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
-       StringGrid2->Cells[0][1+Count_Day]= IntPlusZero(work_buffer[33])+ "-" + IntPlusZero(work_buffer[34])+ "-20" + IntPlusZero(work_buffer[35])+ " " + IntPlusZero(work_buffer[31]) + ":" +IntPlusZero(work_buffer[30])+ ":" + IntPlusZero(work_buffer[29]);       }
+       // ShowMessage("Текущая энергия");
+        KTU= (work_buffer[5]<<8)+work_buffer[6];
+        KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+        if (CheckBox1->Checked==false)  KTU=KTI=1;
+        StringGrid2->Cells[5][1]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
+        StringGrid2->Cells[1][1]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
+        StringGrid2->Cells[2][1]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
+        StringGrid2->Cells[3][1]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
+        StringGrid2->Cells[4][1]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
+        StringGrid2->Cells[0][1+Count_Day]= IntPlusZero(work_buffer[33])+ "-" + IntPlusZero(work_buffer[34])+ "-20" + IntPlusZero(work_buffer[35])+ " " + IntPlusZero(work_buffer[31]) + ":" +IntPlusZero(work_buffer[30])+ ":" + IntPlusZero(work_buffer[29]);
+       }
        else
        {
-        ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
-        return false;
+        if(IDR==5)
+        {
+        //ShowMessage("Текущая мощность");
+        KTU= (work_buffer[5]<<8)+work_buffer[6];
+        KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+        if (CheckBox1->Checked==false)  KTU=KTI=1;
+        StringGrid1->Cells[5][1]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
+        StringGrid1->Cells[1][1]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
+        StringGrid1->Cells[2][1]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
+        StringGrid1->Cells[3][1]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
+        StringGrid1->Cells[4][1]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
+        StringGrid1->Cells[0][1]= IntPlusZero(work_buffer[33])+ "-" + IntPlusZero(work_buffer[34])+ "-20" + IntPlusZero(work_buffer[35])+ " " + IntPlusZero(work_buffer[31]) + ":" +IntPlusZero(work_buffer[30])+ ":" + IntPlusZero(work_buffer[29]);
+       }
+        else
+        {
+         ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
+         return false;
+        }
        }
 
 
@@ -611,7 +628,7 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
   case 0:  //Чтение мгновенной мощности
   {
    StatusBar1->SimpleText="Чтение текущей мощности";
-   SendData(0x08,0x01,0x01);
+   SendData(0x08,0x05,0x01);
    break;
   }
  /* case 1:  //Чтение энергии  на начало суток;
