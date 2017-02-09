@@ -87,6 +87,8 @@ public:		// User declarations
         bool __fastcall ReadSysPar();         //   true - if decode is right, else - false
         String IntPlusZero(unsigned char);    // return format X -> 0X, for date/time
         void __fastcall toExcelCell(int ,int, AnsiString );   // return format X -> 0X, for date/time
+       
+
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;

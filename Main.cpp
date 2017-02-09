@@ -32,6 +32,15 @@ bool Packet_received=false; // Flag permission to send the next packet
 unsigned int Factory_Number=0;
 AnsiString Short_info="";
 
+AnsiString Intervals[]={"00:00-00:30","00:30-01:00","01:00-01:30","01:30-02:00","02:00-02:30","02:30-03:00",
+                        "03:00-03:30","03:30-04:00","04:00-04:30","04:30-05:00","05:00-05:30","05:30-06:00",
+                        "06:00-06:30","06:30-07:00","07:00-07:30","07:30-08:00","08:00-08:30","08:30-09:00",
+                        "09:00-09:30","09:30-10:00","10:00-10:30","10:30-11:00","11:00-11:30","11:30-12:00",
+                        "12:00-12:30","12:30-13:00","13:00-13:30","13:30-14:00","14:00-14:30","14:30-15:00",
+                        "15:00-15:30","15:30-16:00","16:00-16:30","16:30-17:00","17:00-17:30","17:30-18:00",
+                        "18:00-18:30","18:30-19:00","19:00-19:30","19:30-20:00","02:00-20:30","20:30-21:00",
+                        "21:00-21:30","21:30-22:00","22:00-22:30","22:30-23:00","23:00-23:30","23:30-24:00"} ;
+
 
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -414,15 +423,23 @@ bool TForm1::DecodeInBuffer()
         if(IDR==5)
         {
         //ShowMessage("Текущая мощность");
-        KTU= (work_buffer[5]<<8)+work_buffer[6];
-        KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
         if (CheckBox1->Checked==false)  KTU=KTI=1;
-        StringGrid1->Cells[5][1]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
-        StringGrid1->Cells[1][1]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
-        StringGrid1->Cells[2][1]= FloatToStr(float((work_buffer[17]<<24)+ (work_buffer[18]<<16)+ (work_buffer[19]<<8)+ work_buffer[20])/1000*KTI*KTU);
-        StringGrid1->Cells[3][1]= FloatToStr(float((work_buffer[21]<<24)+ (work_buffer[22]<<16)+ (work_buffer[23]<<8)+ work_buffer[24])/1000*KTI*KTU);
-        StringGrid1->Cells[4][1]= FloatToStr(float((work_buffer[25]<<24)+ (work_buffer[26]<<16)+ (work_buffer[27]<<8)+ work_buffer[28])/1000*KTI*KTU);
-        StringGrid1->Cells[0][1]= IntPlusZero(work_buffer[33])+ "-" + IntPlusZero(work_buffer[34])+ "-20" + IntPlusZero(work_buffer[35])+ " " + IntPlusZero(work_buffer[31]) + ":" +IntPlusZero(work_buffer[30])+ ":" + IntPlusZero(work_buffer[29]);
+        if(work_buffer[7]<=47 && work_buffer[10]<=47 && work_buffer[13]<=47 && work_buffer[16]<=47 && work_buffer[19]<=47)
+        {
+         StringGrid1->Cells[5][1]= Intervals[work_buffer[7]] + " - " + FloatToStr(float((work_buffer[5]<<8)+ (work_buffer[6]))/1000*KTI*KTU);
+         StringGrid1->Cells[1][1]= Intervals[work_buffer[10]] + " - " + FloatToStr(float((work_buffer[8]<<8)+ (work_buffer[9]))/1000*KTI*KTU);
+         StringGrid1->Cells[2][1]= Intervals[work_buffer[13]] + " - " + FloatToStr(float((work_buffer[11]<<8)+ (work_buffer[12]))/1000*KTI*KTU);
+         StringGrid1->Cells[3][1]= Intervals[work_buffer[16]] + " - " + FloatToStr(float((work_buffer[14]<<8)+ (work_buffer[15]))/1000*KTI*KTU);
+         StringGrid1->Cells[4][1]= Intervals[work_buffer[19]] + " - " + FloatToStr(float((work_buffer[17]<<8)+ (work_buffer[18]))/1000*KTI*KTU);
+         StringGrid1->Cells[0][1]= Now();
+        }
+        else
+        {
+         ShowMessage("Неверный интервал времени!");
+         return false;
+        }
+
+
        }
         else
         {
@@ -575,6 +592,7 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
  Form1->StringGrid1->Cells[5][0]= "Время/мощность общая, кВт ";
 
  ComboBox1->ItemIndex=0;
+ ComboBox2->ItemIndex=0;
 }
 //---------------------------------------------------------------------------
 
@@ -623,21 +641,21 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
  }
 
  if(PageControl1->ActivePage==TabSheet2)
- switch(ComboBox1->ItemIndex)
+ switch(ComboBox2->ItemIndex)
  {
-  case 0:  //Чтение мгновенной мощности
+  case 0:  //Чтение максимума мощности  на текущие сутки
   {
-   StatusBar1->SimpleText="Чтение текущей мощности";
+   StatusBar1->SimpleText="Чтение максимов мощности за текушие сутки";
    SendData(0x08,0x05,0x01);
    break;
   }
- /* case 1:  //Чтение энергии  на начало суток;
+ case 1:  //Чтение максимума мощности на начало суток;
   {
-   SendData(0x02,Count_Day,0x01);
-   StatusBar1->SimpleText="Чтение показаний энергии на начало суток" ;
+   SendData(0x0A,Count_Day,0x01);
+   StatusBar1->SimpleText="Чтение максимов мощности на начало суток" ;
    break;
   }
-  case 2:  //Чтение энергии  на начало месяца;
+  /* case 2:  //Чтение энергии  на начало месяца;
   {
    SendData(0x04,Count_Month,0x01);
    StatusBar1->SimpleText="Чтение показаний энергии на начало месяца" ;
@@ -651,7 +669,7 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
   }       */
   default:
   {
-   ShowMessage("Неизвестный индекс мощности: " + IntToStr(ComboBox1->ItemIndex));
+   ShowMessage("Неизвестный индекс мощности: " + IntToStr(ComboBox2->ItemIndex));
   }
  }
 
@@ -696,16 +714,36 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
    if(PageControl1->ActivePage==TabSheet1)
    datenumber=Now().FormatString("dd.mm.yy - ") + IntToStr(Factory_Number)+ "_" + IntToStr(ComboBox1->ItemIndex);
    else
+   {
+   if(PageControl1->ActivePage==TabSheet2)
+   datenumber=Now().FormatString("dd.mm.yy - ") + IntToStr(Factory_Number)+ "_" + IntToStr(ComboBox2->ItemIndex+4);
+   else
    datenumber=Now().FormatString("dd.mm.yy - ") + IntToStr(Factory_Number);
+   }
    if (PageControl1->ActivePage==TabSheet1)
    toExcelCell(2,1,ComboBox1->Text);
+
+   if (PageControl1->ActivePage==TabSheet2)
+   {
+    toExcelCell(2,1,"Максимум мощности " + ComboBox2->Text);
+    toExcelCell(6,2,"Получас - Показания максимумов мощности кВт");
+
+   }
+
+
+
    toExcelCell(3,3,Short_info);
    toExcelCell(4,3,IntToStr(Factory_Number));
 
   for (int i=1;i<50;i++)
   for (int j=0;j<10;j++)
+  {
+  if (PageControl1->ActivePage==TabSheet1)
   toExcelCell(i+7,j+1,StringGrid2->Cells[j][i]);
-  // освобождаем ресурсы
+  if (PageControl1->ActivePage==TabSheet2)
+  toExcelCell(i+7,j+1,StringGrid1->Cells[j][i]);
+
+  }// освобождаем ресурсы
 
 App.OlePropertySet("Visible",true);
 AnsiString  aaa= ExtractFilePath(Application->ExeName)+"Архивы\\"+ datenumber +".xls";

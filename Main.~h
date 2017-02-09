@@ -66,9 +66,9 @@ __published:	// IDE-managed Components
         TTimer *Timer1;
         TStringGrid *StringGrid2;
         TLabel *Label1;
-        TCheckBox *CheckBox1;
         TStatusBar *StatusBar1;
         TButton *Button3;
+        TCheckBox *CheckBox1;
         void __fastcall N4Click(TObject *Sender);
         void __fastcall N2Click(TObject *Sender);
         void __fastcall Button2Click(TObject *Sender);
@@ -87,6 +87,8 @@ public:		// User declarations
         bool __fastcall ReadSysPar();         //   true - if decode is right, else - false
         String IntPlusZero(unsigned char);    // return format X -> 0X, for date/time
         void __fastcall toExcelCell(int ,int, AnsiString );   // return format X -> 0X, for date/time
+       
+
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;
