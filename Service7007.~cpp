@@ -4,7 +4,7 @@
 #pragma hdrstop
 //---------------------------------------------------------------------------
 USEFORM("Main.cpp", Form1);
-USEFORM("Port_settings.cpp", Form2);
+USEFORM("AboutProgam.cpp", Form2);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {

@@ -4,12 +4,12 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="Service7007.exe"/>
-    <OBJFILES value="Service7007.obj Main.obj"/>
+    <OBJFILES value="Service7007.obj Main.obj AboutProgam.obj"/>
     <RESFILES value="Service7007.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) Main.dfm"/>
+    <RESDEPEN value="$(RESFILES) Main.dfm AboutProgam.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="CPortLibCB6.lib rtl.lib vcl.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib CPortLibCB6.lib"/>
@@ -28,7 +28,7 @@
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
     <USERDEFINES value="_DEBUG"/>
-    <SYSDEFINES value="_RTLDLL;NO_STRICT"/>
+    <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="Service7007.cpp"/>
     <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;D:\GIT\CET7007-service;$(BCB)\include;$(BCB)\include\vcl;&quot;C:\Program Files\Borland\CBuilder6\Source&quot;"/>
     <LIBPATH value="$(BCB)\Projects\Lib;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;D:\GIT\CET7007-service;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files\Borland\CBuilder6\сport&quot;"/>
@@ -48,9 +48,9 @@
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
-    <ALLOBJ value="c0w32.obj Memmgr.Lib sysinit.obj $(OBJFILES)"/>
+    <ALLOBJ value="c0w32.obj sysinit.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mti.lib"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
     <OTHERFILES value=""/>
   </LINKER>
   <FILELIST>
@@ -58,6 +58,7 @@
       <FILE FILENAME="Service7007.cpp" FORMNAME="" UNITNAME="Service7007" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Main.cpp" FORMNAME="Form1" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Service7007.todo" FORMNAME="" UNITNAME="Service7007.todo" CONTAINERID="ToDo" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="AboutProgam.cpp" FORMNAME="Form2" UNITNAME="AboutProgam" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

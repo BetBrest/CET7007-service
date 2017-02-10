@@ -4,12 +4,14 @@
 #pragma hdrstop
 
 #include "Main.h"
-//#include "Port_Settings.h"
+#include "AboutProgram.h"
 #include "IniFiles.hpp"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma link "CPort"
 #pragma resource "*.dfm"
+
+
 TForm1 *Form1;
 AnsiString dir = GetCurrentDir(); 
 //**************** COMPORT variables*******************************************
@@ -147,9 +149,10 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
            SendData(0x02,Count_Day,0x01);
          }
          else
-        { 
+        {
        //  Timer1->Enabled=true;
         }
+
 
           if (IDP==05 && Count_Month<23 && Packet_received  )
          {
@@ -171,7 +174,27 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
         {
        //  Timer1->Enabled=true;
         }
+           if (IDP==11 && Count_Day<95 && Packet_received  )
+         {
+           Packet_received=false;
+           Sleep(100);
+           SendData(0x0A,Count_Day,0x01);
+         }
+         else
+        {
+       //  Timer1->Enabled=true;
+        }
 
+        if (IDP==13 && Count_Month<23 && Packet_received  )
+         {
+           Packet_received=false;
+           Sleep(100);
+           SendData(0x0C,Count_Month,0x01);
+         }
+         else
+        {
+       //  Timer1->Enabled=true;
+        }
        // Form1->Timer1Timer( Sender);
          //Button3->Enabled=true;
         ///Timer1Timer(0);
@@ -268,6 +291,9 @@ bool TForm1::DecodeInBuffer()
    Count_Day=0;
    Count_Month=0;
    Count_Year=0;
+   KTU=KTI=1;
+    Label2->Caption="KU: " + IntToStr(KTU);
+    Label3->Caption="KI: " + IntToStr(KTI);
    break;
    case 64:
    StatusBar1->SimpleText="Записываемые данные не соответсвуют допустимым";
@@ -335,6 +361,8 @@ bool TForm1::DecodeInBuffer()
    {
     KTU= (work_buffer[5]<<8)+work_buffer[6];
     KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+    Label2->Caption="KU: " + IntToStr(KTU);
+    Label3->Caption="KI: " + IntToStr(KTI);
     if (CheckBox1->Checked==false)  KTU=KTI=1;
     StringGrid2->Cells[5][1+Count_Day]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
     StringGrid2->Cells[1][1+Count_Day]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
@@ -360,6 +388,8 @@ bool TForm1::DecodeInBuffer()
    {
     KTU= (work_buffer[5]<<8)+work_buffer[6];
     KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+    Label2->Caption="KU: " + IntToStr(KTU);
+    Label3->Caption="KI: " + IntToStr(KTI);
     if (CheckBox1->Checked==false)  KTU=KTI=1;
     StringGrid2->Cells[5][1+Count_Month]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
     StringGrid2->Cells[1][1+Count_Month]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
@@ -385,6 +415,8 @@ bool TForm1::DecodeInBuffer()
    {
     KTU= (work_buffer[5]<<8)+work_buffer[6];
     KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+    Label2->Caption="KU: " + IntToStr(KTU);
+    Label3->Caption="KI: " + IntToStr(KTI);
     if (CheckBox1->Checked==false)  KTU=KTI=1;
     StringGrid2->Cells[5][1+Count_Year]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
     StringGrid2->Cells[1][1+Count_Year]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
@@ -410,6 +442,8 @@ bool TForm1::DecodeInBuffer()
        // ShowMessage("Текущая энергия");
         KTU= (work_buffer[5]<<8)+work_buffer[6];
         KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
+        Label2->Caption="KU: " + IntToStr(KTU);
+        Label3->Caption="KI: " + IntToStr(KTI);
         if (CheckBox1->Checked==false)  KTU=KTI=1;
         StringGrid2->Cells[5][1]= FloatToStr(float((work_buffer[9]<<24)+ (work_buffer[10]<<16)+ (work_buffer[11]<<8)+ work_buffer[12])/1000*KTI*KTU);
         StringGrid2->Cells[1][1]= FloatToStr(float((work_buffer[13]<<24)+ (work_buffer[14]<<16)+ (work_buffer[15]<<8)+ work_buffer[16])/1000*KTI*KTU);
@@ -422,37 +456,95 @@ bool TForm1::DecodeInBuffer()
        {
         if(IDR==5)
         {
-        //ShowMessage("Текущая мощность");
-        if (CheckBox1->Checked==false)  KTU=KTI=1;
-        if(work_buffer[7]<=47 && work_buffer[10]<=47 && work_buffer[13]<=47 && work_buffer[16]<=47 && work_buffer[19]<=47)
-        {
-         StringGrid1->Cells[5][1]= Intervals[work_buffer[7]] + " - " + FloatToStr(float((work_buffer[5]<<8)+ (work_buffer[6]))/1000*KTI*KTU);
-         StringGrid1->Cells[1][1]= Intervals[work_buffer[10]] + " - " + FloatToStr(float((work_buffer[8]<<8)+ (work_buffer[9]))/1000*KTI*KTU);
-         StringGrid1->Cells[2][1]= Intervals[work_buffer[13]] + " - " + FloatToStr(float((work_buffer[11]<<8)+ (work_buffer[12]))/1000*KTI*KTU);
-         StringGrid1->Cells[3][1]= Intervals[work_buffer[16]] + " - " + FloatToStr(float((work_buffer[14]<<8)+ (work_buffer[15]))/1000*KTI*KTU);
-         StringGrid1->Cells[4][1]= Intervals[work_buffer[19]] + " - " + FloatToStr(float((work_buffer[17]<<8)+ (work_buffer[18]))/1000*KTI*KTU);
-         StringGrid1->Cells[0][1]= Now();
+         //ShowMessage("Текущая мощность");
+         if (CheckBox1->Checked==false)  KTU=KTI=1;
+         if(work_buffer[7]<=47 && work_buffer[10]<=47 && work_buffer[13]<=47 && work_buffer[16]<=47 && work_buffer[19]<=47)
+         {
+          StringGrid1->Cells[5][1]= Intervals[work_buffer[7]] + " - " + FloatToStr(float((work_buffer[5]<<8)+ (work_buffer[6]))/1000*KTI*KTU);
+          StringGrid1->Cells[1][1]= Intervals[work_buffer[10]] + " - " + FloatToStr(float((work_buffer[8]<<8)+ (work_buffer[9]))/1000*KTI*KTU);
+          StringGrid1->Cells[2][1]= Intervals[work_buffer[13]] + " - " + FloatToStr(float((work_buffer[11]<<8)+ (work_buffer[12]))/1000*KTI*KTU);
+          StringGrid1->Cells[3][1]= Intervals[work_buffer[16]] + " - " + FloatToStr(float((work_buffer[14]<<8)+ (work_buffer[15]))/1000*KTI*KTU);
+          StringGrid1->Cells[4][1]= Intervals[work_buffer[19]] + " - " + FloatToStr(float((work_buffer[17]<<8)+ (work_buffer[18]))/1000*KTI*KTU);
+          StringGrid1->Cells[0][1]= Now();
+         }
+         else
+         {
+          ShowMessage("Неверный интервал времени!");
+          return false;
+         }
         }
-        else
-        {
-         ShowMessage("Неверный интервал времени!");
-         return false;
-        }
-
-
-       }
         else
         {
          ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
          return false;
         }
        }
-
-
+     break;
+  }
+   case 11:  //  Reading max power on begining days
+      {
+       if(IDR<90)
+       {
+        //ShowMessage("Текущая мощность");
+        if (CheckBox1->Checked==false)  KTU=KTI=1;
+        if(work_buffer[7]<=47 && work_buffer[10]<=47 && work_buffer[13]<=47 && work_buffer[16]<=47 && work_buffer[19]<=47)
+        {
+         StringGrid1->Cells[5][1+Count_Day]= Intervals[work_buffer[7]] + " - " + FloatToStr(float((work_buffer[5]<<8)+ (work_buffer[6]))/1000*KTI*KTU);
+         StringGrid1->Cells[1][1+Count_Day]= Intervals[work_buffer[10]] + " - " + FloatToStr(float((work_buffer[8]<<8)+ (work_buffer[9]))/1000*KTI*KTU);
+         StringGrid1->Cells[2][1+Count_Day]= Intervals[work_buffer[13]] + " - " + FloatToStr(float((work_buffer[11]<<8)+ (work_buffer[12]))/1000*KTI*KTU);
+         StringGrid1->Cells[3][1+Count_Day]= Intervals[work_buffer[16]] + " - " + FloatToStr(float((work_buffer[14]<<8)+ (work_buffer[15]))/1000*KTI*KTU);
+         StringGrid1->Cells[4][1+Count_Day]= Intervals[work_buffer[19]] + " - " + FloatToStr(float((work_buffer[17]<<8)+ (work_buffer[18]))/1000*KTI*KTU);
+         StringGrid1->Cells[0][1+Count_Day]= IntPlusZero(work_buffer[24])+ "-" + IntPlusZero(work_buffer[25])+ "-20" + IntPlusZero(work_buffer[26])+ " " + IntPlusZero(work_buffer[22]) + ":" +IntPlusZero(work_buffer[21])+ ":" + IntPlusZero(work_buffer[20]);
+         Count_Day++;
+         Packet_received=true;
+        }
+        else
+        {
+        // ShowMessage("Неверный интервал времени! - "+ IntToStr(work_buffer[7]));
+         StatusBar1->SimpleText= "Неверный интервал времени! - "+ IntToStr(work_buffer[7]);
+         return false;
+        }
+       }
+       else
+       {
+        ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
+        return false;
+       }
 
      break;
   }
+  case 13:  //  Reading max power on begining months
+      {
+       if(IDR<23)
+       {
+        //ShowMessage("Текущая мощность");
+        if (CheckBox1->Checked==false)  KTU=KTI=1;
+        if(work_buffer[7]<=47 && work_buffer[10]<=47 && work_buffer[13]<=47 && work_buffer[16]<=47 && work_buffer[19]<=47)
+        {
+         StringGrid1->Cells[5][1+Count_Month]= Intervals[work_buffer[7]] + " - " + FloatToStr(float((work_buffer[5]<<8)+ (work_buffer[6]))/1000*KTI*KTU);
+         StringGrid1->Cells[1][1+Count_Month]= Intervals[work_buffer[10]] + " - " + FloatToStr(float((work_buffer[8]<<8)+ (work_buffer[9]))/1000*KTI*KTU);
+         StringGrid1->Cells[2][1+Count_Month]= Intervals[work_buffer[13]] + " - " + FloatToStr(float((work_buffer[11]<<8)+ (work_buffer[12]))/1000*KTI*KTU);
+         StringGrid1->Cells[3][1+Count_Month]= Intervals[work_buffer[16]] + " - " + FloatToStr(float((work_buffer[14]<<8)+ (work_buffer[15]))/1000*KTI*KTU);
+         StringGrid1->Cells[4][1+Count_Month]= Intervals[work_buffer[19]] + " - " + FloatToStr(float((work_buffer[17]<<8)+ (work_buffer[18]))/1000*KTI*KTU);
+         StringGrid1->Cells[0][1+Count_Month]= IntPlusZero(work_buffer[25])+ "-20" + IntPlusZero(work_buffer[26]);
+         Count_Month++;
+         Packet_received=true;
+        }
+        else
+        {
+        // ShowMessage("Неверный интервал времени! - "+ IntToStr(work_buffer[7]));
+         StatusBar1->SimpleText= "Неверный интервал времени! - "+ IntToStr(work_buffer[7]);
+         return false;
+        }
+       }
+       else
+       {
+        ShowMessage("Неизвестный дополнительный идентефикатор пакета IDR = " + IntToStr(IDR));
+        return false;
+       }
 
+     break;
+  }
 
   default:
   {
@@ -593,11 +685,14 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 
  ComboBox1->ItemIndex=0;
  ComboBox2->ItemIndex=0;
+
+
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
+Count_Day=Count_Month=Count_Year=0;
  // Очистка Stringrid2
  for (int i = 0; i < StringGrid2->ColCount; i++)
  for (int j = 1; j < StringGrid2->RowCount; j++)
@@ -655,18 +750,13 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
    StatusBar1->SimpleText="Чтение максимов мощности на начало суток" ;
    break;
   }
-  /* case 2:  //Чтение энергии  на начало месяца;
+   case 2:  //Чтение энергии  на начало месяца;
   {
-   SendData(0x04,Count_Month,0x01);
-   StatusBar1->SimpleText="Чтение показаний энергии на начало месяца" ;
+   SendData(0x0C,Count_Month,0x01);
+   StatusBar1->SimpleText="Чтение максимов мощности на начало месяца" ;
    break;
   }
-  case 3:  //Чтение энергии  на начало года;
-  {
-   SendData(0x06,Count_Year,0x01);
-   StatusBar1->SimpleText="Чтение показаний энергии на начало года" ;
-   break;
-  }       */
+
   default:
   {
    ShowMessage("Неизвестный индекс мощности: " + IntToStr(ComboBox2->ItemIndex));
@@ -727,10 +817,7 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
    {
     toExcelCell(2,1,"Максимум мощности " + ComboBox2->Text);
     toExcelCell(6,2,"Получас - Показания максимумов мощности кВт");
-
    }
-
-
 
    toExcelCell(3,3,Short_info);
    toExcelCell(4,3,IntToStr(Factory_Number));
@@ -757,6 +844,12 @@ App.OlePropertyGet("WorkSheets",1).OleProcedure("SaveAs",aaa.c_str());
         Sh.Clear();
     App.Clear();
 
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N5Click(TObject *Sender)
+{
+Form2->Visible=True;
 }
 //---------------------------------------------------------------------------
 

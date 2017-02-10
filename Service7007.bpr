@@ -4,12 +4,12 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="Service7007.exe"/>
-    <OBJFILES value="Service7007.obj Main.obj"/>
+    <OBJFILES value="Service7007.obj Main.obj AboutProgram.obj"/>
     <RESFILES value="Service7007.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) Main.dfm"/>
+    <RESDEPEN value="$(RESFILES) Main.dfm AboutProgram.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="CPortLibCB6.lib rtl.lib vcl.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib CPortLibCB6.lib"/>
@@ -58,6 +58,7 @@
       <FILE FILENAME="Service7007.cpp" FORMNAME="" UNITNAME="Service7007" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Main.cpp" FORMNAME="Form1" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Service7007.todo" FORMNAME="" UNITNAME="Service7007.todo" CONTAINERID="ToDo" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="AboutProgram.cpp" FORMNAME="Form2" UNITNAME="AboutProgram" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
