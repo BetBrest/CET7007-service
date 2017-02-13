@@ -142,7 +142,7 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
           new_paket = true;
           read_byte=0;
 
-         if (IDP==03 && Count_Day<95 && Packet_received  )
+         if (IDP==03 && Count_Day<=95 && Packet_received  )
          {
            Packet_received=false;
            Sleep(100);
@@ -150,6 +150,8 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
          }
          else
         {
+         if(Count_Day==96)
+         StatusBar1->SimpleText="Опрос завершен!" ;
        //  Timer1->Enabled=true;
         }
 
@@ -357,7 +359,7 @@ bool TForm1::DecodeInBuffer()
 
   case 3:  // energy reading at the beginning of the day
   {
-   if (IDR < 93)
+   if (IDR <= 95)
    {
     KTU= (work_buffer[5]<<8)+work_buffer[6];
     KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
@@ -701,6 +703,8 @@ Count_Day=Count_Month=Count_Year=0;
  for (int i = 0; i < StringGrid1->ColCount; i++)
  for (int j = 1; j < StringGrid1->RowCount; j++)
  StringGrid1->Cells[i][j] = "";
+
+// StringGrid1->Row=1  ;
 
  if(PageControl1->ActivePage==TabSheet1)
  switch(ComboBox1->ItemIndex)

@@ -10,7 +10,7 @@
 #pragma package(smart_init)
 #pragma link "CPort"
 #pragma resource "*.dfm"
-#define Version "1.0.1"
+
 
 TForm1 *Form1;
 AnsiString dir = GetCurrentDir(); 
@@ -142,7 +142,7 @@ void __fastcall TForm1::ComPort1RxChar(TObject *Sender, int Count)
           new_paket = true;
           read_byte=0;
 
-         if (IDP==03 && Count_Day<95 && Packet_received  )
+         if (IDP==03 && Count_Day<=95 && Packet_received  )
          {
            Packet_received=false;
            Sleep(100);
@@ -357,7 +357,7 @@ bool TForm1::DecodeInBuffer()
 
   case 3:  // energy reading at the beginning of the day
   {
-   if (IDR < 93)
+   if (IDR <= 95)
    {
     KTU= (work_buffer[5]<<8)+work_buffer[6];
     KTI= (work_buffer[7]<<8)+work_buffer[8]; //     ShowMessage(IntToStr(KTU));
@@ -685,6 +685,8 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 
  ComboBox1->ItemIndex=0;
  ComboBox2->ItemIndex=0;
+
+
 }
 //---------------------------------------------------------------------------
 
